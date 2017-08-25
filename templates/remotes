@@ -1,0 +1,9 @@
+{% for r in nullmailer_remotes -%}
+
+{%- set port = ' --port={}'.format(r.port) if r.port is defined else '' -%}
+{%- set ssl = ' --ssl' if (r.ssl | default(True)) else '' -%}
+{%- set user = ' --user={}'.format(nullmailer_smtp_user) -%}
+{%- set pass = ' --pass={}'.format(nullmailer_smtp_pass) -%}
+
+{{ r.host }} smtp{{ port }}{{ ssl }}{{ user }}{{ pass }}
+{% endfor %}

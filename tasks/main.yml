@@ -1,0 +1,34 @@
+---
+- name: install_package
+  package:
+    name: nullmailer
+    state: latest
+
+- name: configure_default_host
+  copy:
+    dest: /etc/nullmailer/defaulthost
+    content: "{{ ansible_fqdn }}"
+    mode: 0644
+  notify: restart_nullmailer
+
+- name: configure_default_domain
+  copy:
+    dest: /etc/nullmailer/defaultdomain
+    content: "{{ ansible_fqdn }}"
+    mode: 0644
+  notify: restart_nullmailer
+
+- name: configure_remotes
+  template:
+    src: remotes
+    dest: /etc/nullmailer/remotes
+    owner: "{{ nullmailer_service_user }}"
+    group: "{{ nullmailer_service_group }}"
+    mode: 0600
+  notify: restart_nullmailer
+
+- name: setup_service
+  service:
+    name: nullmailer
+    state: started
+    enabled: True
